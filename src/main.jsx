@@ -39,6 +39,7 @@ import { createBrowserRouter } from "react-router";
 import RootLayout from './layouts/RootLayout.jsx';
 import Home from './components/Home/Home.jsx';
 import AllMovies from './components/AllMovies/AllMovies.jsx';
+import Register from './components/Register/Register.jsx';
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: '/all-movies',
         Component: AllMovies
+      },
+      {
+        path:'/register',
+        Component: Register
       }
     ]
   },
