@@ -52,7 +52,8 @@ const router = createBrowserRouter([
       },
       {
         path: '/all-movies',
-        Component: AllMovies
+        loader: () => fetch('http://localhost:3000/movies'),
+        element: <AllMovies></AllMovies>
       },
       {
         path:'/register',

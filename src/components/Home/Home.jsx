@@ -2,6 +2,7 @@ import React, { use } from "react";
 import LatestMovies from "../LatestMovies/LatestMovies";
 import TopRatedMovies from "../TopRatedMovies/TopRatedMovies";
 import StaticCard from "../StaticCard/StaticCard";
+import Genre from "../Genre/Genre";
 
 const latestMoviesPromise = fetch("http://localhost:3000/latest-movies").then(
   (res) => res.json()
@@ -20,6 +21,7 @@ const Home = () => {
   return (
     <div>
       <h2>this is home</h2>
+      <Genre></Genre>
       <LatestMovies latestMoviesPromise={latestMoviesPromise}></LatestMovies>
 
         <h2 className="text-3xl font-bold mt-8 mb-4">Top Rated Movies</h2>
