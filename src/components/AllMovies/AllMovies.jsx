@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLoaderData } from 'react-router';
+import { Link, useLoaderData } from 'react-router';
 
 const AllMovies = () => {
   const movies = useLoaderData();
@@ -37,7 +37,7 @@ const AllMovies = () => {
                 </div>
               </div>
               <div className="mt-4">
-                <button className="btn btn-primary w-full">Details</button>
+                <Link to={`/movieDetails/${movie._id}`} className="btn btn-primary w-full">Details</Link>
               </div>
             </div>
           </div>

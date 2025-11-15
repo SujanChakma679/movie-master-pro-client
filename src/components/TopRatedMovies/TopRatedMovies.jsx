@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 
 const TopRatedMovies = ({ movies }) => {
   return (
@@ -27,7 +28,7 @@ const TopRatedMovies = ({ movies }) => {
                 </div>
               </div>
               <div className="card-actions">
-                <button className="btn btn-primary w-full">Details</button>
+                <Link to={`/movieDetails/${movie._id}`} className="btn btn-primary w-full">Details</Link>
               </div>
             </div>
           </div>

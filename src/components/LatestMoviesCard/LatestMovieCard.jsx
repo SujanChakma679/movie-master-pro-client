@@ -33,9 +33,10 @@
 // export default LatestMovieCard;
 
 import React from 'react';
+import { Link } from 'react-router';
 
 const LatestMovieCard = ({movie}) => {
-    const {title, genre, posterUrl, rating, releaseYear } = movie;
+    const {_id, title, genre, posterUrl, rating, releaseYear } = movie;
     return (
         
         <div className="bg-base-100 shadow-sm">
@@ -58,7 +59,7 @@ const LatestMovieCard = ({movie}) => {
                     </div>
                 </div>
                 <div className="card-actions">
-                    <button className="btn btn-primary w-full">Details</button>
+                    <Link to={`/movieDetails/${_id}`} className="btn btn-primary w-full">Details</Link>
                 </div>
             </div>
         </div>
