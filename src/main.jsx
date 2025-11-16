@@ -38,6 +38,7 @@ import Home from "./components/Home/Home.jsx";
 import AllMovies from "./components/AllMovies/AllMovies.jsx";
 import Register from "./components/Register/Register.jsx";
 import MovieDetails from "./MovieDetails/MovieDetails.jsx";
+import AuthProvider from "./context/AuthProvider.jsx";
 
 const router = createBrowserRouter([
   {
@@ -72,6 +73,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+   <AuthProvider>
+         <RouterProvider router={router} />
+   </AuthProvider>
   </StrictMode>
 );

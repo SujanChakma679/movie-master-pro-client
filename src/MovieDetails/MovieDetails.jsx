@@ -15,7 +15,7 @@ const MovieDetails = () => {
       </div>
       <div>
         <h2 className="font-bold text-4xl text-center py-4">{movie.title}</h2>
-        <p className="text-center"><span className="font-semibold ">Rating:</span> <span className="font-bold text-2xl text-amber-500">{movie.rating}</span></p>
+        <p className="text-center"><span className="font-semibold ">Rating:</span> <span className="font-bold text-3xl text-amber-500">{movie.rating}</span></p>
         <div className="space-y-2 text-lg p-8">
         <p><span className="font-semibold">Genre:</span> {movie.genre}</p>
         <p><span className="font-semibold">Release Year:</span> {movie.releaseYear}</p>
