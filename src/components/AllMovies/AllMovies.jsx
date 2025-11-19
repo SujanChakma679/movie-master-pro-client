@@ -36,8 +36,12 @@ const AllMovies = () => {
                   <p className="text-amber-800">Rating: {movie.rating}</p>
                 </div>
               </div>
-              <div className="mt-4">
-                <Link to={`/movieDetails/${movie._id}`} className="btn btn-primary w-full">Details</Link>
+              <div className="mt-4 flex space-x-2 justify-between">
+                <div>
+                  <Link to={`/movieDetails/${movie._id}`} className="btn btn-primary !px-12 ">Details</Link>
+                </div>
+                <Link to={`/movies/my-watch-list`} className="btn btn-primary ">Add to WatchList</Link>
+                
               </div>
             </div>
           </div>

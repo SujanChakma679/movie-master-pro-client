@@ -3,6 +3,8 @@ import LatestMovies from "../LatestMovies/LatestMovies";
 import TopRatedMovies from "../TopRatedMovies/TopRatedMovies";
 import StaticCard from "../StaticCard/StaticCard";
 import Genre from "../Genre/Genre";
+// import Slider from '../components/Slider/Slider';
+import Slider from "../Slider/Slider";
 
 const latestMoviesPromise = fetch("http://localhost:3000/latest-movies").then(
   (res) => res.json()
@@ -21,6 +23,7 @@ const Home = () => {
   return (
     <div>
       <h2>this is home</h2>
+      <Slider></Slider>
       <Genre></Genre>
       <LatestMovies latestMoviesPromise={latestMoviesPromise}></LatestMovies>
 

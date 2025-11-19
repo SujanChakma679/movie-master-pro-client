@@ -39,7 +39,7 @@ const LatestMovieCard = ({movie}) => {
     const {_id, title, genre, posterUrl, rating, releaseYear } = movie;
     return (
         
-        <div className="bg-base-100 shadow-sm">
+        <div className="bg-base-100 shadow-sm p-4">
             <figure className="px-10 pt-10 h-96 w-full overflow-hidden">
                 <img
                     src={posterUrl}
@@ -59,7 +59,7 @@ const LatestMovieCard = ({movie}) => {
                     </div>
                 </div>
                 <div className="card-actions">
-                    <Link to={`/movieDetails/${_id}`} className="btn btn-primary w-full">Details</Link>
+                    <Link to={`/movieDetails/${_id}`} className="btn btn-primary !w-full">Details</Link>
                 </div>
             </div>
         </div>

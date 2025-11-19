@@ -1,4 +1,4 @@
-/* @import "tailwindcss"; */
+
 @plugin "daisyui" {
   themes: light --default;
  }
@@ -11,4 +11,15 @@
   default: true;
   --color-primary: blue;
   --color-secondary: teal;
+}
+
+.btn-primary {
+  @apply btn text-white border-0;
+  
+  background-image: linear-gradient(
+    to right,
+    #059669,
+    #022c22 
+    
+  );
 }

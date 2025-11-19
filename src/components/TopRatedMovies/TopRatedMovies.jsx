@@ -4,9 +4,9 @@ import { Link } from "react-router";
 const TopRatedMovies = ({ movies }) => {
   return (
     <div>
-      <div className="grid grid-cols-3">
+      <div className="grid grid-cols-3 gap-6 w-11/12 mx-auto">
         {movies.map((movie) => (
-          <div className=" bg-base-100 shadow-sm">
+          <div className=" bg-base-100 shadow-sm p-4">
             <figure className="px-10 pt-10 h-96 w-full overflow-hidden">
                 <img
                     src={movie.posterUrl}
@@ -28,7 +28,7 @@ const TopRatedMovies = ({ movies }) => {
                 </div>
               </div>
               <div className="card-actions">
-                <Link to={`/movieDetails/${movie._id}`} className="btn btn-primary w-full">Details</Link>
+                <Link to={`/movieDetails/${movie._id}`} className="btn btn-primary !w-full">Details</Link>
               </div>
             </div>
           </div>
