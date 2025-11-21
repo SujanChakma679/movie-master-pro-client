@@ -17,8 +17,9 @@ import MyWatchList from "./components/MyWatchList/MyWatchList.jsx";
 
 import MovieDetails from "./components/MovieDetails/MovieDetails.jsx";
 import MyCollections from "./components/MyCollections/MyCollections.jsx";
-import AddMovies from "./components/AddMovies/AddMovies.jsx";
+
 import Login from "./components/Login/Login.jsx";
+import AddMovie from "./components/AddMovies/AddMovie.jsx";
 
 
 const router = createBrowserRouter([
@@ -58,7 +59,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'movies/add',
-        Component: AddMovies
+        Component: AddMovie
       },
       {
         path: 'movies/my-collections',
