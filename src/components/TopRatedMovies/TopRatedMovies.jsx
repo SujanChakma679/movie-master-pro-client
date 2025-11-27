@@ -1,12 +1,15 @@
 import React from "react";
 import { Link } from "react-router";
+import { useTheme } from "../../context/ThemeContext";
 
 const TopRatedMovies = ({ movies }) => {
+
+  const { isDark } = useTheme();
   return (
     <div>
-      <div className="grid grid-cols-3 gap-6 w-11/12 mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-11/12 mx-auto">
         {movies.map((movie) => (
-          <div className=" bg-base-100 shadow-sm p-4">
+          <div className={`bg-base-100 shadow-sm p-4 transition-colors ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
             <figure className="px-10 pt-10 h-96 w-full overflow-hidden">
                 <img
                     src={movie.posterUrl}
@@ -28,7 +31,7 @@ const TopRatedMovies = ({ movies }) => {
                 </div>
               </div>
               <div className="card-actions">
-                <Link to={`/movieDetails/${movie._id}`} className="btn btn-primary !w-full">Details</Link>
+                <Link to={`/movieDetails/${movie._id}`} className="btn-primary !w-full">Details</Link>
               </div>
             </div>
           </div>

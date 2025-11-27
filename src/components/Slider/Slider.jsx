@@ -20,7 +20,7 @@ const Slider = () => {
   ];
 
   return (
-    <div className="carousel w-full h-80 md:h-96 lg:h-[600px]">
+    <div className="carousel w-full h-80 md:h-[500px] lg:h-[800px] pb-10">
       {images.map((src, index) => {
         const prevIndex = (index === 0) ? images.length - 1 : index - 1;
         const nextIndex = (index === images.length - 1) ? 0 : index + 1;

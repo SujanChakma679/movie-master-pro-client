@@ -4,45 +4,43 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 
-import { createBrowserRouter } from "react-router";
-import { RouterProvider } from "react-router/dom";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import RootLayout from "./layouts/RootLayout.jsx";
 import Home from "./components/Home/Home.jsx";
 import AllMovies from "./components/AllMovies/AllMovies.jsx";
 import Register from "./components/Register/Register.jsx";
-
-import AuthProvider from "./context/AuthProvider.jsx";
-import MyWatchList from "./components/MyWatchList/MyWatchList.jsx";
-
-
-import MovieDetails from "./components/MovieDetails/MovieDetails.jsx";
-import MyCollections from "./components/MyCollections/MyCollections.jsx";
-
 import Login from "./components/Login/Login.jsx";
 import AddMovie from "./components/AddMovies/AddMovie.jsx";
+import MyWatchList from "./components/MyWatchList/MyWatchList.jsx";
+import MyCollections from "./components/MyCollections/MyCollections.jsx";
+import MovieDetails from "./components/MovieDetails/MovieDetails.jsx";
 
+import AuthProvider from "./context/AuthProvider.jsx";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
+import { AppErrorBoundary } from "./components/Page/ErrorPage/AppErrorBoundary.jsx";
+import NotFound from "./components/Page/ErrorPage/NotFound.jsx";
+import ErrorPage from "./components/Page/ErrorPage/ErrorPage.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: RootLayout,
+    element: <RootLayout />,
+    errorElement: <ErrorPage />,
     children: [
+      { index: true, element: <Home /> },
       {
-        index: true,
-        Component: Home,
+        path: "movies",
+        loader: () =>
+          fetch("http://localhost:3000/movies").then((res) => res.json()),
+        element: <AllMovies />,
       },
-      {
-        path: "/movies",
-        loader: () => fetch("http://localhost:3000/movies"),
-        element: <AllMovies></AllMovies>,
+      { 
+        path: "login", 
+        element: <Login /> 
       },
-      {
-        path:"login",
-        Component: Login
-      },
-      {
-        path: "register",
-        Component: Register,
+      { path: "register", 
+        element: <Register /> 
       },
       {
         path: "movieDetails/:id",
@@ -51,30 +49,48 @@ const router = createBrowserRouter([
           if (!res.ok) throw new Error("Failed to fetch movie");
           return res.json();
         },
-        Component: MovieDetails,
+        element: <MovieDetails />,
+      },
+      { 
+        path: "movies/my-watch-list", 
+        element: (
+          <ProtectedRoute>
+               <MyWatchList /> 
+          </ProtectedRoute>
+        ),
+      },
+      { 
+        path: "movies/add", 
+        element: (
+      <ProtectedRoute>
+        <AddMovie />
+      </ProtectedRoute>
+    ), 
+      },
+      { 
+        path: "movies/my-collections", 
+        element: (
+      <ProtectedRoute>
+        <MyCollections />
+      </ProtectedRoute>
+    ), 
       },
       {
-        path: '/movies/my-watch-list',
-        Component: MyWatchList
+        path: '*',
+        element: <NotFound />,
       },
-      {
-        path: 'movies/add',
-        Component: AddMovie
-      },
-      {
-        path: 'movies/my-collections',
-        Component: MyCollections
-      }
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-   <AuthProvider>
-         
-        <RouterProvider router={router} />
-     
-   </AuthProvider>
+    <ThemeProvider>
+          <AuthProvider>
+               <AppErrorBoundary>
+                    <RouterProvider router={router} />
+               </AppErrorBoundary>
+          </AuthProvider>
+    </ThemeProvider>
   </StrictMode>
 );

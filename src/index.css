@@ -1,10 +1,11 @@
 
+
+
+ @import "tailwindcss";
+
 @plugin "daisyui" {
-  themes: light --default;
- }
-
-
-@import "tailwindcss";
+  themes: light, dark; 
+}
 
 @plugin "daisyui/theme" {
   name: "light";
@@ -13,13 +14,20 @@
   --color-secondary: teal;
 }
 
+
 .btn-primary {
-  @apply btn text-white border-0;
-  
-  background-image: linear-gradient(
-    to right,
-    #059669,
-    #022c22 
-    
-  );
+  background-image: linear-gradient(to right, #059669, #022c22);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  display: inline-block;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
 }

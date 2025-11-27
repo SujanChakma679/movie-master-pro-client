@@ -1,71 +1,5 @@
-
-
-
-// import React, { useState, useContext } from 'react';
-// import Swal from 'sweetalert2';
-// import { AuthContext } from '../../context/AuthContext';
-
-// const AddMovie = () => {
-//   const { user } = useContext(AuthContext);
-//   const [movie, setMovie] = useState({
-//     title: '',
-//     genre: '',
-//     director: '',
-//     releaseYear: '',
-//     rating: ''
-//   });
-
-//   const handleChange = (e) => {
-//     setMovie({ ...movie, [e.target.name]: e.target.value });
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     if (!user?.email) {
-//       Swal.fire({ icon: 'error', title: 'Error!', text: 'User not logged in' });
-//       return;
-//     }
-
-//     const movieWithEmail = { ...movie, email: user.email };
-
-//     try {
-//       const res = await fetch('http://localhost:3000/movies/add', {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify(movieWithEmail)
-//       });
-
-//       const data = await res.json();
-
-//       if (res.ok) {
-//         Swal.fire({ icon: 'success', title: 'Success!', text: 'Movie added successfully' });
-//         setMovie({ title: '', genre: '', director: '', releaseYear: '', rating: '' });
-//       } else {
-//         Swal.fire({ icon: 'error', title: 'Error!', text: data.message || 'Failed to add movie' });
-//       }
-//     } catch (error) {
-//       Swal.fire({ icon: 'error', title: 'Error!', text: 'Something went wrong' });
-//     }
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-//       <input name="title" placeholder="Title" value={movie.title} onChange={handleChange} required />
-//       <input name="genre" placeholder="Genre" value={movie.genre} onChange={handleChange} required />
-//       <input name="director" placeholder="Director" value={movie.director} onChange={handleChange} required />
-//       <input name="releaseYear" placeholder="Release Year" type="number" value={movie.releaseYear} onChange={handleChange} required />
-//       <input name="rating" placeholder="Rating" type="number" step="0.1" value={movie.rating} onChange={handleChange} required />
-//       <button type="submit">Add Movie</button>
-//     </form>
-//   );
-// };
-
-// export default AddMovie;
-
-
-
 import React, { useState, useContext } from 'react';
+import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import { AuthContext } from '../../context/AuthContext';
 
@@ -75,8 +9,14 @@ const AddMovie = () => {
     title: '',
     posterUrl: '',
     genre: '',
+    director: '',
+    cast: '',
     releaseYear: '',
-    rating: ''
+    rating: '',
+    duration: '',
+    plotSummary: '',
+    language: '',
+    country: '',
   });
 
   const handleChange = (e) => {
@@ -95,11 +35,13 @@ const AddMovie = () => {
       ...movie,
       releaseYear: Number(movie.releaseYear),
       rating: Number(movie.rating),
-      email: user.email          // this must match backend
+      duration: Number(movie.duration),
+      addedBy: user.email,
+      created_at: new Date().toISOString(),
     };
 
     try {
-      const res = await fetch('http://localhost:3000/movies/add', {
+      const res = await fetch('http://localhost:3000/movies', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,14 +54,28 @@ const AddMovie = () => {
         throw new Error(errData.message || 'Failed to add movie');
       }
 
-      toast.success('Movie added successfully');
+      // SweetAlert success message
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Movie added successfully!',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
+      });
+
       // reset form
       setMovie({
         title: '',
         posterUrl: '',
         genre: '',
+        director: '',
+        cast: '',
         releaseYear: '',
-        rating: ''
+        rating: '',
+        duration: '',
+        plotSummary: '',
+        language: '',
+        country: '',
       });
     } catch (error) {
       console.error(error);
@@ -132,6 +88,7 @@ const AddMovie = () => {
       <h2 className="text-3xl font-bold mb-4 text-white text-center">Add a Movie</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Title */}
         <input
           name="title"
           placeholder="Title"
@@ -140,6 +97,8 @@ const AddMovie = () => {
           className="input input-bordered w-full"
           required
         />
+
+        {/* Poster URL */}
         <input
           name="posterUrl"
           placeholder="Poster URL"
@@ -148,14 +107,38 @@ const AddMovie = () => {
           className="input input-bordered w-full"
           required
         />
+
+        {/* Genre */}
         <input
           name="genre"
-          placeholder="Genre"
+          placeholder="Genre (e.g. Drama)"
           value={movie.genre}
           onChange={handleChange}
           className="input input-bordered w-full"
           required
         />
+
+        {/* Director */}
+        <input
+          name="director"
+          placeholder="Director"
+          value={movie.director}
+          onChange={handleChange}
+          className="input input-bordered w-full"
+          required
+        />
+
+        {/* Cast */}
+        <input
+          name="cast"
+          placeholder="Cast (comma separated)"
+          value={movie.cast}
+          onChange={handleChange}
+          className="input input-bordered w-full"
+          required
+        />
+
+        {/* Release Year */}
         <input
           name="releaseYear"
           type="number"
@@ -165,18 +148,62 @@ const AddMovie = () => {
           className="input input-bordered w-full"
           required
         />
+
+        {/* Rating */}
         <input
           name="rating"
           type="number"
           step="0.1"
-          placeholder="Rating"
+          placeholder="Rating (e.g. 9.3)"
           value={movie.rating}
           onChange={handleChange}
           className="input input-bordered w-full"
           required
         />
 
-        <button type="submit" className="btn btn-primary w-full">
+        {/* Duration */}
+        <input
+          name="duration"
+          type="number"
+          placeholder="Duration in minutes (e.g. 142)"
+          value={movie.duration}
+          onChange={handleChange}
+          className="input input-bordered w-full"
+          required
+        />
+
+        {/* Plot Summary */}
+        <textarea
+          name="plotSummary"
+          placeholder="Plot Summary"
+          value={movie.plotSummary}
+          onChange={handleChange}
+          className="textarea textarea-bordered w-full"
+          rows={3}
+          required
+        />
+
+        {/* Language */}
+        <input
+          name="language"
+          placeholder="Language (e.g. English)"
+          value={movie.language}
+          onChange={handleChange}
+          className="input input-bordered w-full"
+          required
+        />
+
+        {/* Country */}
+        <input
+          name="country"
+          placeholder="Country (e.g. USA)"
+          value={movie.country}
+          onChange={handleChange}
+          className="input input-bordered w-full"
+          required
+        />
+
+        <button type="submit" className="btn-primary !w-full">
           Add Movie
         </button>
       </form>
@@ -185,5 +212,3 @@ const AddMovie = () => {
 };
 
 export default AddMovie;
-
-

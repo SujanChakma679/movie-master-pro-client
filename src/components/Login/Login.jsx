@@ -1,103 +1,118 @@
-import React, { use, useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { Link, useLocation, useNavigate } from 'react-router';
+import Swal from 'sweetalert2';
 
 const Login = () => {
   const [error, setError] = useState('');
-
   const location = useLocation();
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { signInWithGoogle, signInUser } = useContext(AuthContext);
 
+  // Get the user wanted to visit, default to home
+  const from = location.state?.from?.pathname || '/';
 
-    const { signInWithGoogle, signInUser } = use(AuthContext);
+  // Email/Password login
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
-     const handleLogin = (e)=>{
-        e.preventDefault();
-        const email = e.target.email.value;
-        const password = e.target.password.value;
-        console.log({email, password})
-        signInUser(email, password)
-        .then((result) => {
-            console.log(result.user)
-            navigate(`${location.state? location.state : '/'}`)
+    signInUser(email, password)
+      .then((result) => {
+        Swal.fire({
+          title: 'Logged In!',
+          text: 'You have successfully logged in.',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        navigate(from, { replace: true });
+      })
+      .catch((err) => {
+        setError(err.code);
+      });
+  };
 
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            // const errorMessage = error.message;
-            // alert(errorCode, errorMessage)
-            setError(errorCode);
-
-        })
-    };
-
+  // Google login
   const handleGoogleSignIn = () => {
     signInWithGoogle()
       .then((result) => {
-        console.log(result.user);
-
         const newUser = {
           name: result.user.displayName,
           email: result.user.email,
           image: result.user.photoURL,
         };
 
-        //create user in the database
-        fetch("http://localhost:3000/users", {
-          method: "post",
-          headers: {
-            "content-type": "application/json",
-          },
+        // Save user to database
+        fetch('http://localhost:3000/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newUser),
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log("data after user save", data);
+            console.log('User saved:', data);
           });
+
+      
+
+        navigate(from, { replace: true });
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        setError(err.code);
       });
   };
 
-    return (
-        
+  return (
     <div className="card bg-base-100 w-full mx-auto max-w-sm shrink-0 shadow-2xl py-10">
       <div className="card-body">
-         <h1 className="text-5xl font-bold">Login now!</h1>
-        
+        <h1 className="text-5xl font-bold">Login now!</h1>
+
         <form onSubmit={handleLogin}>
-            <fieldset className="fieldset">
-          {/* email */}
-          <label className="label">Email</label>
-          <input 
-              name='email'
-              type="email" 
-              className="input" 
-              placeholder="Email" />
-              {/* password */}
-          <label className="label">Password</label>
-          <input
-          name='password' 
-          type="password" 
-          className="input" 
-          placeholder="Password" />
-          <div><a className="link link-hover">Forgot password?</a></div>
+          <fieldset className="fieldset">
+            <label className="label">Email</label>
+            <input
+              name="email"
+              type="email"
+              className="input"
+              placeholder="Email"
+              required
+            />
 
-           {
-                  error && <p className="text-red-600 text-xs">{error}</p>
-            }
+            <label className="label">Password</label>
+            <input
+              name="password"
+              type="password"
+              className="input"
+              placeholder="Password"
+              required
+            />
 
-           <p>Are you new to our website? Please, <Link to={'/register'} className="text-green-700 hover:text-green-400 underline">Register</Link></p>
+            <div>
+              <a className="link link-hover">Forgot password?</a>
+            </div>
 
-          <button className="btn btn-neutral mt-4">Login</button>
-        </fieldset>
+            {error && <p className="text-red-600 text-xs mt-2">{error}</p>}
+
+            <p className="mt-2">
+              Are you new to our website? Please{' '}
+              <Link
+                to="/register"
+                className="text-green-700 hover:text-green-400 underline"
+              >
+                Register
+              </Link>
+            </p>
+
+            <button className="btn btn-neutral mt-4 w-full">Login</button>
+          </fieldset>
         </form>
 
-        {/* Google */}
+        {/* Google login */}
         <button
           onClick={handleGoogleSignIn}
-          className="btn bg-white text-black border-[#e5e5e5]"
+          className="btn bg-white text-black border-[#e5e5e5] mt-4 w-full flex items-center justify-center gap-2"
         >
           <svg
             aria-label="Google logo"
@@ -130,8 +145,7 @@ const Login = () => {
         </button>
       </div>
     </div>
-
-    );
+  );
 };
 
 export default Login;
