@@ -14,26 +14,9 @@ A modern streaming platform for movie lovers to browse, discover, and manage the
 
 ## Demo
 
-Live Site: [Your Live Demo URL]
+Live Site: []
 
-GitHub Repository: [Your GitHub Repo URL]
-
-## Screenshots
-
-### Homepage
-![Homepage](./screenshots/home.png)
-
-### All Movies
-![All Movies](./screenshots/movies.png)
-
-### Movie Details
-![Movie Details](./screenshots/details.png)
-
-### My Watchlist
-![Watchlist](./screenshots/watchlist.png)
-
-### Dark Mode
-![Dark Mode](./screenshots/dark-mode.png)
+GitHub Repository: []
 
 ## Tech Stack
 
@@ -222,12 +205,6 @@ Contributions are welcome. Please follow these steps:
 ## License
 
 This project is licensed under the MIT License.
-
-## Author
-
-Your Name
-- GitHub: @yourusername
-- Email: your.email@example.com
 
 ## Acknowledgments
 
