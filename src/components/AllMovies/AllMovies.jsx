@@ -3,6 +3,8 @@ import { Link, useLoaderData } from "react-router";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
+import useAxios from "../hooks/useAxios";
+
 
 const AllMovies = () => {
   const movies = useLoaderData();
@@ -17,60 +19,59 @@ const AllMovies = () => {
     );
   }
 
+
   const handleAddToWatchlist = async (movie) => {
-    if (!user?.email) {
+  const axiosInstance = useAxios();
+
+  if (!user?.email) {
+    Swal.fire({
+      icon: "warning",
+      title: "Oops!",
+      text: "Please login to add to watchlist",
+      confirmButtonColor: "#3085d6",
+    });
+    return;
+  }
+
+  try {
+    await axiosInstance.post("/watchlist", {
+      userEmail: user.email,
+      movieId: movie._id,
+      title: movie.title,
+      posterUrl: movie.posterUrl,
+      genre: movie.genre,
+      releaseYear: movie.releaseYear,
+      rating: movie.rating,
+    });
+
+    Swal.fire({
+      icon: "success",
+      title: "Added!",
+      text: "Movie added to your watchlist successfully",
+      confirmButtonColor: "#3085d6",
+    });
+
+  } catch (error) {
+    if (error.response?.status === 409) {
       Swal.fire({
-        icon: "warning",
-        title: "Oops!",
-        text: "Please login to add to watchlist",
+        icon: "info",
+        title: "Already Added",
+        text: "This movie is already in your watchlist",
         confirmButtonColor: "#3085d6",
       });
       return;
     }
 
-    try {
-      const res = await fetch("http://localhost:3000/watchlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userEmail: user.email,
-          movieId: movie._id,
-          title: movie.title,
-          posterUrl: movie.posterUrl,
-          genre: movie.genre,
-          releaseYear: movie.releaseYear,
-          rating: movie.rating,
-        }),
-      });
+    console.error(error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Something went wrong while adding to watchlist",
+      confirmButtonColor: "#3085d6",
+    });
+  }
+};
 
-      if (res.status === 409) {
-        Swal.fire({
-          icon: "info",
-          title: "Already Added",
-          text: "This movie is already in your watchlist",
-          confirmButtonColor: "#3085d6",
-        });
-        return;
-      }
-
-      if (!res.ok) throw new Error("Failed to add to watchlist");
-
-      Swal.fire({
-        icon: "success",
-        title: "Added!",
-        text: "Movie added to your watchlist successfully",
-        confirmButtonColor: "#3085d6",
-      });
-    } catch (error) {
-      console.error(error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Something went wrong while adding to watchlist",
-        confirmButtonColor: "#3085d6",
-      });
-    }
-  };
 
   return (
     <div className={`max-w-7xl mx-auto p-4 md:p-8 transition-colors ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>

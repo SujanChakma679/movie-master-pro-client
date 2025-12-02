@@ -1,18 +1,19 @@
-
-
 import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import useAxios from '../hooks/useAxios';
 
 const MyWatchlist = () => {
   const { user } = useContext(AuthContext);
+  const axios = useAxios();
+
   const [watchlist, setWatchlist] = useState([]);
   const [loading, setLoading] = useState(true);
   const [removingIds, setRemovingIds] = useState(new Set());
-
   const { isDark } = useTheme();
+
 
   useEffect(() => {
     if (!user?.email) {
@@ -22,26 +23,23 @@ const MyWatchlist = () => {
 
     const fetchWatchlist = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:3000/watchlist?email=${encodeURIComponent(user.email)}`
-        );
-        if (!res.ok) throw new Error('Failed to fetch watchlist');
-        const data = await res.json();
-        setWatchlist(data);
+        const res = await axios.get(`/watchlist?email=${encodeURIComponent(user.email)}`);
+        setWatchlist(res.data);
       } catch (error) {
         console.error('Error fetching watchlist:', error);
+        Swal.fire('Error', 'Failed to load your watchlist', 'error');
       } finally {
         setLoading(false);
       }
     };
 
     fetchWatchlist();
-  }, [user]);
+  }, [user?.email, axios]);
 
+  // Remove movie from watchlist
   const handleRemove = async (id) => {
     if (!user?.email) return;
 
-    // SweetAlert confirmation
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to remove this movie from your watchlist?',
@@ -56,25 +54,12 @@ const MyWatchlist = () => {
     if (!result.isConfirmed) return;
 
     const previous = watchlist;
-    const newList = previous.filter((item) => item._id !== id);
-    setWatchlist(newList);
+    setWatchlist(previous.filter((item) => item._id !== id));
     setRemovingIds((prev) => new Set(prev).add(id));
 
     try {
-      const res = await fetch(
-        `http://localhost:3000/watchlist/${encodeURIComponent(
-          id
-        )}?email=${encodeURIComponent(user.email)}`,
-        { method: 'DELETE' }
-      );
+      await axios.delete(`/watchlist/${id}?email=${encodeURIComponent(user.email)}`);
 
-      const resultData = await res.json().catch(() => null);
-
-      if (!res.ok) {
-        throw new Error(resultData?.error || `Delete failed with status ${res.status}`);
-      }
-
-      // SweetAlert success message
       Swal.fire({
         icon: 'success',
         title: 'Removed!',
@@ -85,7 +70,6 @@ const MyWatchlist = () => {
       console.error('Failed to remove from watchlist:', err);
       setWatchlist(previous);
 
-      // SweetAlert error message
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -112,7 +96,10 @@ const MyWatchlist = () => {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto p-4 md:p-8 text-center">
-        <p>Loading your watchlist...<span className="loading loading-spinner text-error"></span></p>
+        <p>
+          Loading your watchlist...
+          <span className="loading loading-spinner text-error"></span>
+        </p>
       </div>
     );
   }
@@ -130,10 +117,14 @@ const MyWatchlist = () => {
   }
 
   return (
-    <div className={`max-w-7xl mx-auto p-4 md:p-8 transition-colors ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <div
+      className={`max-w-7xl mx-auto p-4 md:p-8 transition-colors ${
+        isDark ? 'bg-gray-900' : 'bg-gray-50'
+      }`}
+    >
       <h2 className="text-4xl font-bold mb-6 text-center">My Watchlist</h2>
 
-      <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 `}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {watchlist.map((item) => (
           <div key={item._id} className="bg-base-100 shadow-sm rounded-xl overflow-hidden">
             <figure className="px-4 pt-4 h-96 w-full overflow-hidden">
@@ -168,8 +159,6 @@ const MyWatchlist = () => {
           </div>
         ))}
       </div>
-
-
     </div>
   );
 };

@@ -1,22 +1,24 @@
-import React, { useState, useContext } from 'react';
-import Swal from 'sweetalert2';
-import toast from 'react-hot-toast';
-import { AuthContext } from '../../context/AuthContext';
+import React, { useState, useContext } from "react";
+import Swal from "sweetalert2";
+import toast from "react-hot-toast";
+import { AuthContext } from "../../context/AuthContext";
+import useAxios from "../hooks/useAxios";
 
 const AddMovie = () => {
+  const axiosInstance = useAxios();
   const { user } = useContext(AuthContext);
   const [movie, setMovie] = useState({
-    title: '',
-    posterUrl: '',
-    genre: '',
-    director: '',
-    cast: '',
-    releaseYear: '',
-    rating: '',
-    duration: '',
-    plotSummary: '',
-    language: '',
-    country: '',
+    title: "",
+    posterUrl: "",
+    genre: "",
+    director: "",
+    cast: "",
+    releaseYear: "",
+    rating: "",
+    duration: "",
+    plotSummary: "",
+    language: "",
+    country: "",
   });
 
   const handleChange = (e) => {
@@ -24,68 +26,71 @@ const AddMovie = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!user?.email) {
-      toast.error('Please login to add a movie');
-      return;
-    }
+  if (!user?.email) {
+    toast.error("Please login to add a movie");
+    return;
+  }
 
-    const movieData = {
-      ...movie,
-      releaseYear: Number(movie.releaseYear),
-      rating: Number(movie.rating),
-      duration: Number(movie.duration),
-      addedBy: user.email,
-      created_at: new Date().toISOString(),
-    };
-
-    try {
-      const res = await fetch('http://localhost:3000/movies', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(movieData),
-      });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.message || 'Failed to add movie');
-      }
-
-      // SweetAlert success message
-      Swal.fire({
-        icon: 'success',
-        title: 'Success!',
-        text: 'Movie added successfully!',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK'
-      });
-
-      // reset form
-      setMovie({
-        title: '',
-        posterUrl: '',
-        genre: '',
-        director: '',
-        cast: '',
-        releaseYear: '',
-        rating: '',
-        duration: '',
-        plotSummary: '',
-        language: '',
-        country: '',
-      });
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message || 'Something went wrong');
-    }
+  const movieData = {
+    ...movie,
+    releaseYear: Number(movie.releaseYear),
+    rating: Number(movie.rating),
+    duration: Number(movie.duration),
+    addedBy: user.email,
+    created_at: new Date().toISOString(),
   };
+
+  try {
+    const res = await axiosInstance.post("/movies", movieData);
+
+    console.log("Movie added:", res.data);
+
+    Swal.fire({
+      icon: "success",
+      title: "Success!",
+      text: "Movie added successfully!",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "OK",
+    });
+
+    // reset form
+    setMovie({
+      title: "",
+      posterUrl: "",
+      genre: "",
+      director: "",
+      cast: "",
+      releaseYear: "",
+      rating: "",
+      duration: "",
+      plotSummary: "",
+      language: "",
+      country: "",
+    });
+  } catch (error) {
+    // Axios error handling
+    if (error.response) {
+      // Server responded with a status code out of 2xx range
+      toast.error(error.response.data.message || "Failed to add movie");
+    } else if (error.request) {
+      // Request was made but no response received
+      toast.error("No response from server");
+    } else {
+      // Other errors
+      toast.error(error.message);
+    }
+
+    console.error(error);
+  }
+};
 
   return (
     <div className="max-w-xl mx-auto p-4 md:p-8">
-      <h2 className="text-3xl font-bold mb-4 text-white text-center">Add a Movie</h2>
+      <h2 className="text-3xl font-bold mb-4 text-white text-center">
+        Add a Movie
+      </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title */}

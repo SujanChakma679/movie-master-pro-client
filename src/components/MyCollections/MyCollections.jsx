@@ -1,14 +1,18 @@
 
 
+
 import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import Swal from "sweetalert2";
 import { useTheme } from "../../context/ThemeContext";
+import useAxios from "../hooks/useAxios";
+
 
 const MyCollections = () => {
-
   const { isDark } = useTheme();
   const { user } = useContext(AuthContext);
+  const axios = useAxios();
+
   const [movies, setMovies] = useState([]);
   const [editingMovie, setEditingMovie] = useState(null);
   const [editData, setEditData] = useState({
@@ -19,14 +23,14 @@ const MyCollections = () => {
     posterUrl: "",
   });
 
+  // Fetch user's movies
   useEffect(() => {
     if (!user?.email) return;
 
     const fetchMyMovies = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/movies`);
-        const data = await res.json();
-        const myMovies = data.filter((movie) => movie.addedBy === user.email);
+        const res = await axios.get("/movies");
+        const myMovies = res.data.filter((movie) => movie.addedBy === user.email);
         setMovies(myMovies);
       } catch (err) {
         console.error(err);
@@ -35,11 +39,11 @@ const MyCollections = () => {
     };
 
     fetchMyMovies();
-  }, [user?.email]);
+  }, [user?.email, axios]);
 
+  // Remove a movie
   const handleRemove = async (id) => {
     try {
-      // Confirmation before delete
       const result = await Swal.fire({
         title: "Are you sure?",
         text: "Do you want to remove this movie from your collection?",
@@ -53,12 +57,7 @@ const MyCollections = () => {
 
       if (!result.isConfirmed) return;
 
-      const res = await fetch(`http://localhost:3000/movies/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) throw new Error("Failed to delete movie");
-
+      await axios.delete(`/movies/${id}`);
       setMovies((prev) => prev.filter((m) => m._id !== id));
       Swal.fire("Deleted!", "Movie removed from collection.", "success");
     } catch (err) {
@@ -67,6 +66,24 @@ const MyCollections = () => {
     }
   };
 
+  // Edit a movie
+  const handleEditSubmit = async () => {
+    try {
+      await axios.patch(`/movies/${editingMovie._id}`, editData);
+
+      setMovies((prev) =>
+        prev.map((m) => (m._id === editingMovie._id ? { ...m, ...editData } : m))
+      );
+
+      setEditingMovie(null);
+      Swal.fire("Success", "Movie updated successfully", "success");
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", "Failed to update movie", "error");
+    }
+  };
+
+  // Open edit modal
   const handleEditClick = (movie) => {
     setEditingMovie(movie);
     setEditData({
@@ -78,44 +95,24 @@ const MyCollections = () => {
     });
   };
 
-  const handleEditSubmit = async () => {
-    try {
-      const res = await fetch(`http://localhost:3000/movies/${editingMovie._id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editData),
-      });
-
-      if (!res.ok) throw new Error("Failed to update movie");
-
-      setMovies((prev) =>
-        prev.map((m) => (m._id === editingMovie._id ? { ...m, ...editData } : m))
-      );
-      setEditingMovie(null);
-      Swal.fire("Success", "Movie updated successfully", "success");
-    } catch (err) {
-      console.error(err);
-      Swal.fire("Error", "Failed to update movie", "error");
-    }
-  };
-
   if (!user?.email)
     return <p className="text-center text-white mt-8">Please login to see your collection</p>;
 
-
-  
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-8">
-      <h2 className="text-4xl font-bold mb-6 text-center">
-        My Movie Collections
-      </h2>
+      <h2 className="text-4xl font-bold mb-6 text-center">My Movie Collections</h2>
 
       {movies.length === 0 ? (
         <p className="text-center">No movies added yet</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {movies.map((movie) => (
-            <div key={movie._id} className={`bg-base-100 shadow-sm rounded-xl overflow-hidden transition-colors ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+            <div
+              key={movie._id}
+              className={`bg-base-100 shadow-sm rounded-xl overflow-hidden transition-colors ${
+                isDark ? "bg-gray-900" : "bg-gray-50"
+              }`}
+            >
               <img
                 src={movie.posterUrl}
                 alt={movie.title}
@@ -125,20 +122,17 @@ const MyCollections = () => {
                 <h2 className="text-2xl font-semibold text-center">{movie.title}</h2>
                 <div className="flex justify-between items-center">
                   <div>
-                       <p>Genre: {movie.genre}</p>
-                       <p>Year: {movie.releaseYear}</p>
+                    <p>Genre: {movie.genre}</p>
+                    <p>Year: {movie.releaseYear}</p>
                   </div>
-                <p className="text-amber-800 font-semibold text-lg">Rating: {movie.rating}</p>
+                  <p className="text-amber-800 font-semibold text-lg">Rating: {movie.rating}</p>
                 </div>
 
                 <div className="flex justify-between mt-4">
                   <button className="btn-primary !px-10" onClick={() => handleEditClick(movie)}>
                     Edit
                   </button>
-                  <button
-                    className="btn-primary"
-                    onClick={() => handleRemove(movie._id)}
-                  >
+                  <button className="btn-primary" onClick={() => handleRemove(movie._id)}>
                     Remove
                   </button>
                 </div>
@@ -155,45 +149,17 @@ const MyCollections = () => {
             <h2 className="text-2xl font-bold mb-4 text-center">Edit Movie</h2>
 
             <div className="flex flex-col space-y-3">
-              <label className="font-semibold text-gray-700">Title</label>
-              <input
-                className="input input-bordered w-full"
-                placeholder="Title"
-                value={editData.title}
-                onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-              />
-
-              <label className="font-semibold text-gray-700">Genre</label>
-              <input
-                className="input input-bordered w-full"
-                placeholder="Genre"
-                value={editData.genre}
-                onChange={(e) => setEditData({ ...editData, genre: e.target.value })}
-              />
-
-              <label className="font-semibold text-gray-700">Release Year</label>
-              <input
-                className="input input-bordered w-full"
-                placeholder="Year"
-                value={editData.releaseYear}
-                onChange={(e) => setEditData({ ...editData, releaseYear: e.target.value })}
-              />
-
-              <label className="font-semibold text-gray-700">Rating</label>
-              <input
-                className="input input-bordered w-full"
-                placeholder="Rating"
-                value={editData.rating}
-                onChange={(e) => setEditData({ ...editData, rating: e.target.value })}
-              />
-
-              <label className="font-semibold text-gray-700">Poster URL</label>
-              <input
-                className="input input-bordered w-full"
-                placeholder="Poster URL"
-                value={editData.posterUrl}
-                onChange={(e) => setEditData({ ...editData, posterUrl: e.target.value })}
-              />
+              {["title", "genre", "releaseYear", "rating", "posterUrl"].map((field) => (
+                <div key={field}>
+                  <label className="font-semibold text-gray-700">{field[0].toUpperCase() + field.slice(1)}</label>
+                  <input
+                    className="input input-bordered w-full"
+                    placeholder={field[0].toUpperCase() + field.slice(1)}
+                    value={editData[field]}
+                    onChange={(e) => setEditData({ ...editData, [field]: e.target.value })}
+                  />
+                </div>
+              ))}
             </div>
 
             <div className="flex justify-end mt-6 space-x-3">
