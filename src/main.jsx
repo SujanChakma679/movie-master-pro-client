@@ -21,6 +21,9 @@ import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { AppErrorBoundary } from "./components/Page/ErrorPage/AppErrorBoundary.jsx";
 import NotFound from "./components/Page/ErrorPage/NotFound.jsx";
 import ErrorPage from "./components/Page/ErrorPage/ErrorPage.jsx";
+import useAxios from "./components/hooks/useAxios.jsx";
+
+
 
 const router = createBrowserRouter([
   {
@@ -31,8 +34,15 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       {
         path: "movies",
-        loader: () =>
-          fetch("http://localhost:3000/movies").then((res) => res.json()),
+         loader: async () => {
+          const axios = useAxios();
+          try {
+            const res = await axios.get("/movies");
+            return res.data;
+          } catch (err) {
+            throw new Error("Failed to fetch movies");
+          }
+        },
         element: <AllMovies />,
       },
       { 
@@ -45,9 +55,13 @@ const router = createBrowserRouter([
       {
         path: "movieDetails/:id",
         loader: async ({ params }) => {
-          const res = await fetch(`http://localhost:3000/movies/${params.id}`);
-          if (!res.ok) throw new Error("Failed to fetch movie");
-          return res.json();
+          const axios = useAxios();
+          try {
+            const res = await axios.get(`/movies/${params.id}`);
+            return res.data;
+          } catch (err) {
+            throw new Error("Failed to fetch movie details");
+          }
         },
         element: <MovieDetails />,
       },

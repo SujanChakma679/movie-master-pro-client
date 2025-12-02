@@ -109,7 +109,7 @@ const MyWatchlist = () => {
       <div className="max-w-4xl mx-auto p-4 md:p-8 text-center text-white">
         <h2 className="text-3xl font-bold mb-4">My Watchlist</h2>
         <p>Your watchlist is empty. Go add some movies!</p>
-        <Link to="/movies" className="btn btn-primary mt-4">
+        <Link to="/movies" className="btn-primary mt-4">
           Browse Movies
         </Link>
       </div>

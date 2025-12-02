@@ -8,6 +8,7 @@ import useAxios from "../hooks/useAxios";
 
 const AllMovies = () => {
   const movies = useLoaderData();
+  console.log(movies)
   const { user } = useContext(AuthContext);
    const { isDark } = useTheme();
 
@@ -128,3 +129,5 @@ const AllMovies = () => {
 };
 
 export default AllMovies;
+
+
