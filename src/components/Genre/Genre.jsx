@@ -1,4 +1,3 @@
-
 import React, { useContext, useState } from "react";
 import Swal from "sweetalert2";
 import { Link } from "react-router";
@@ -41,9 +40,7 @@ const Genre = () => {
   // click on a genre card -> toggle in selectedGenres
   const handleGenreClick = (genre) => {
     setSelectedGenres((prev) =>
-      prev.includes(genre)
-        ? prev.filter((g) => g !== genre)
-        : [...prev, genre]
+      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
     );
   };
 
@@ -61,8 +58,8 @@ const Genre = () => {
 
       const url =
         params.toString().length > 0
-          ? `http://localhost:3000/movies?${params.toString()}`
-          : "http://localhost:3000/movies";
+          ? `https://movie-master-pro-server-tan.vercel.app/movies?${params.toString()}`
+          : "https://movie-master-pro-server-tan.vercel.app/movies";
       const res = await fetch(url);
 
       if (!res.ok) {
@@ -124,19 +121,22 @@ const Genre = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:3000/watchlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userEmail: user.email,
-          movieId: movie._id,
-          title: movie.title,
-          posterUrl: movie.posterUrl,
-          genre: movie.genre,
-          releaseYear: movie.releaseYear,
-          rating: movie.rating,
-        }),
-      });
+      const res = await fetch(
+        "https://movie-master-pro-server-tan.vercel.app/watchlist",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userEmail: user.email,
+            movieId: movie._id,
+            title: movie.title,
+            posterUrl: movie.posterUrl,
+            genre: movie.genre,
+            releaseYear: movie.releaseYear,
+            rating: movie.rating,
+          }),
+        }
+      );
 
       if (res.status === 409) {
         Swal.fire({
@@ -193,7 +193,11 @@ const Genre = () => {
                 bg-gradient-to-tr from-purple-900 to-emerald-600 shadow-2xl shadow-purple-900/50 
                 transform transition-all duration-300 hover:scale-105 hover:shadow-pink-500/60 
                 cursor-pointer text-center border 
-                ${isActive ? "border-yellow-300 ring-2 ring-yellow-300" : "border-transparent"}`}
+                ${
+                  isActive
+                    ? "border-yellow-300 ring-2 ring-yellow-300"
+                    : "border-transparent"
+                }`}
             >
               <h3 className="text-lg font-semibold tracking-wide">{genre}</h3>
             </button>
@@ -208,7 +212,9 @@ const Genre = () => {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="font-semibold block mb-2 text-black">Min Rating</label>
+            <label className="font-semibold block mb-2 text-black">
+              Min Rating
+            </label>
             <input
               type="number"
               step="0.1"
@@ -217,11 +223,12 @@ const Genre = () => {
               value={minRating}
               onChange={(e) => setMinRating(e.target.value)}
               className="input input-bordered w-full"
-              
             />
           </div>
           <div>
-            <label className="font-semibold block mb-2 text-black">Max Rating</label>
+            <label className="font-semibold block mb-2 text-black">
+              Max Rating
+            </label>
             <input
               type="number"
               step="0.1"
@@ -230,7 +237,6 @@ const Genre = () => {
               value={maxRating}
               onChange={(e) => setMaxRating(e.target.value)}
               className="input input-bordered w-full"
-              
             />
           </div>
         </div>

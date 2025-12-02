@@ -43,7 +43,7 @@ const Home = () => {
   }, [axios]);
 
   if (loading) {
-    return <p className="text-center py-10">Loading movies...</p>;
+    return <p className="text-center py-10">Loading...<span className="loading loading-spinner text-warning"></span></p>;
   }
 
   if (error) {
