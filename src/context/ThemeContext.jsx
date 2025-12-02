@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Create a context - this allows us to share dark mode state across all components
+
 const ThemeContext = createContext();
 
 
@@ -23,7 +23,7 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     const theme = isDark ? 'dark' : 'light';
     localStorage.setItem('theme', theme);
-    // DaisyUI reads this attribute to apply dark mode
+    
     document.documentElement.setAttribute('data-theme', theme);
   }, [isDark]);
 

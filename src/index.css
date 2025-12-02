@@ -31,3 +31,7 @@
   opacity: 0.9;
   transform: scale(1.02);
 }
+
+.navbar li{
+  font-weight: 600;
+}

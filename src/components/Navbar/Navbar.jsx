@@ -80,7 +80,7 @@ const Navbar = () => {
             {links}
           </ul>
         </div>
-        <Link to={"/"} className="btn btn-ghost text-xl bg-gradient-to-tr from-purple-700 to-emerald-600 bg-clip-text text-transparent">
+        <Link to={"/"} className="btn btn-ghost font-semibold text-xl bg-gradient-to-tr from-purple-700 to-emerald-600 bg-clip-text text-transparent">
           Movie Master
         </Link>
       </div>
