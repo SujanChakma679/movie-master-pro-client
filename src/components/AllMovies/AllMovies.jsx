@@ -1,16 +1,84 @@
-import React, { useContext } from "react";
+
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useLoaderData } from "react-router";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import useAxios from "../hooks/useAxios";
 
-
 const AllMovies = () => {
-  const movies = useLoaderData();
-  console.log(movies)
+  const loaderMovies = useLoaderData();
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const { user } = useContext(AuthContext);
-   const { isDark } = useTheme();
+  const { isDark } = useTheme();
+  const axiosInstance = useAxios();
+
+
+  useEffect(() => {
+    if (loaderMovies && loaderMovies.length > 0) {
+      setMovies(loaderMovies);
+    }
+    setLoading(false);
+  }, [loaderMovies]);
+
+  const handleAddToWatchlist = async (movie) => {
+    if (!user?.email) {
+      Swal.fire({
+        icon: "warning",
+        title: "Oops!",
+        text: "Please login to add to watchlist",
+        confirmButtonColor: "#3085d6",
+      });
+      return;
+    }
+
+    try {
+      await axiosInstance.post("/watchlist", {
+        userEmail: user.email,
+        movieId: movie._id,
+        title: movie.title,
+        posterUrl: movie.posterUrl,
+        genre: movie.genre,
+        releaseYear: movie.releaseYear,
+        rating: movie.rating,
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Added!",
+        text: "Movie added to your watchlist successfully",
+        confirmButtonColor: "#3085d6",
+      });
+    } catch (error) {
+      if (error.response?.status === 409) {
+        Swal.fire({
+          icon: "info",
+          title: "Already Added",
+          text: "This movie is already in your watchlist",
+          confirmButtonColor: "#3085d6",
+        });
+        return;
+      }
+
+      console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Something went wrong while adding to watchlist",
+        confirmButtonColor: "#3085d6",
+      });
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="text-center text-white mt-20">
+        <h2 className="text-xl font-semibold">Loading movies...<span className="loading loading-spinner text-error"></span></h2>
+      </div>
+    );
+  }
 
   if (!movies || movies.length === 0) {
     return (
@@ -20,63 +88,9 @@ const AllMovies = () => {
     );
   }
 
-
-  const handleAddToWatchlist = async (movie) => {
-  const axiosInstance = useAxios();
-
-  if (!user?.email) {
-    Swal.fire({
-      icon: "warning",
-      title: "Oops!",
-      text: "Please login to add to watchlist",
-      confirmButtonColor: "#3085d6",
-    });
-    return;
-  }
-
-  try {
-    await axiosInstance.post("/watchlist", {
-      userEmail: user.email,
-      movieId: movie._id,
-      title: movie.title,
-      posterUrl: movie.posterUrl,
-      genre: movie.genre,
-      releaseYear: movie.releaseYear,
-      rating: movie.rating,
-    });
-
-    Swal.fire({
-      icon: "success",
-      title: "Added!",
-      text: "Movie added to your watchlist successfully",
-      confirmButtonColor: "#3085d6",
-    });
-
-  } catch (error) {
-    if (error.response?.status === 409) {
-      Swal.fire({
-        icon: "info",
-        title: "Already Added",
-        text: "This movie is already in your watchlist",
-        confirmButtonColor: "#3085d6",
-      });
-      return;
-    }
-
-    console.error(error);
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Something went wrong while adding to watchlist",
-      confirmButtonColor: "#3085d6",
-    });
-  }
-};
-
-
   return (
     <div className={`max-w-7xl mx-auto p-4 md:p-8 transition-colors ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      <h2 className="text-4xl font-bold mb-6 text-center">All Movies</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">All Movies</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {movies.map((movie) => (
@@ -94,8 +108,8 @@ const AllMovies = () => {
             </figure>
 
             <div className="p-4">
-              <h2 className="text-2xl font-semibold text-center">{movie.title}</h2>
-              <div className="flex items-center justify-around text-lg font-semibold mt-2">
+              <h2 className="text-xl font-semibold text-center">{movie.title}</h2>
+              <div className="flex items-center justify-around text-md font-semibold mt-2">
                 <div>
                   <p>Genre: {movie.genre}</p>
                   <p>Release Year: {movie.releaseYear}</p>
@@ -108,14 +122,14 @@ const AllMovies = () => {
               <div className="mt-4 flex space-x-2 justify-between">
                 <Link
                   to={`/movieDetails/${movie._id}`}
-                  className=" btn-primary px-12"
+                  className="btn-primary px-12"
                 >
                   Details
                 </Link>
 
                 <button
                   onClick={() => handleAddToWatchlist(movie)}
-                  className=" btn-primary"
+                  className="btn-primary"
                 >
                   Add to WatchList
                 </button>
@@ -129,5 +143,3 @@ const AllMovies = () => {
 };
 
 export default AllMovies;
-
-

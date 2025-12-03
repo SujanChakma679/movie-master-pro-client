@@ -27,8 +27,8 @@ const TopRatedMovies = ({ movies }) => {
             </figure>
 
             <div>
-              <h2 className="text-3xl font-semibold text-center">{movie.title}</h2>
-              <div className="flex items-center justify-around text-lg font-semibold p-2">
+              <h2 className="text-xl font-semibold text-center">{movie.title}</h2>
+              <div className="flex items-center justify-around text-md font-semibold p-2">
                 <div>
                   <p>Genre: {movie.genre}</p>
                   <p>Release Year: {movie.releaseYear}</p>

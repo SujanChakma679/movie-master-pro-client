@@ -107,7 +107,7 @@ const MyWatchlist = () => {
   if (watchlist.length === 0) {
     return (
       <div className="max-w-4xl mx-auto p-4 md:p-8 text-center text-white">
-        <h2 className="text-3xl font-bold mb-4">My Watchlist</h2>
+        <h2 className="text-2xl font-bold mb-4">My Watchlist</h2>
         <p>Your watchlist is empty. Go add some movies!</p>
         <Link to="/movies" className="btn-primary mt-4">
           Browse Movies
@@ -122,7 +122,7 @@ const MyWatchlist = () => {
         isDark ? 'bg-gray-900' : 'bg-gray-50'
       }`}
     >
-      <h2 className="text-4xl font-bold mb-6 text-center">My Watchlist</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">My Watchlist</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {watchlist.map((item) => (
@@ -136,8 +136,8 @@ const MyWatchlist = () => {
             </figure>
 
             <div className="p-4">
-              <h2 className="text-2xl font-semibold text-center">{item.title}</h2>
-              <div className="flex items-center justify-around text-lg font-semibold mt-2">
+              <h2 className="text-xl font-semibold text-center">{item.title}</h2>
+              <div className="flex items-center justify-around text-md font-semibold mt-2">
                 <div>
                   <p>Genre: {item.genre}</p>
                   <p>Release Year: {item.releaseYear}</p>

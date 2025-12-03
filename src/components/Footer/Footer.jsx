@@ -11,16 +11,16 @@ const Footer = () => {
     <footer className="w-full bg-emerald-900 py-8 px-4 flex flex-col items-center">
       {/* 2. Navigation Links */}
       <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-4">
-        <a href="#" className={`text-lg font-medium ${textColor}`}>
+        <a href="#" className={`text-mg font-medium ${textColor}`}>
           About us
         </a>
-        <a href="#" className={`text-lg font-medium ${textColor}`}>
+        <a href="#" className={`text-md font-medium ${textColor}`}>
           Contact
         </a>
-        <a href="#" className={`text-lg font-medium ${textColor}`}>
+        <a href="#" className={`text-md font-medium ${textColor}`}>
           Jobs
         </a>
-        <a href="#" className={`text-lg font-medium ${textColor}`}>
+        <a href="#" className={`text-md font-medium ${textColor}`}>
           Press kit
         </a>
       </nav>
@@ -61,7 +61,7 @@ const Footer = () => {
 
       {/* 4. Copyright Info */}
       <aside>
-        <p className="text-lg text-white">
+        <p className="text-md text-white">
           Copyright © {new Date().getFullYear()} - All rights reserved by ACME
           Industries Ltd
         </p>

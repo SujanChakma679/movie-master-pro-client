@@ -59,7 +59,7 @@ const MyCollections = () => {
 
       await axios.delete(`/movies/${id}`);
       setMovies((prev) => prev.filter((m) => m._id !== id));
-      Swal.fire("Deleted!", "Movie removed from collection.", "success");
+      Swal.fire("Removed!", "Movie removed from collection.", "success");
     } catch (err) {
       console.error(err);
       Swal.fire("Error", "Failed to remove movie.", "error");
@@ -100,7 +100,7 @@ const MyCollections = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-8">
-      <h2 className="text-4xl font-bold mb-6 text-center">My Movie Collections</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">My Movie Collections</h2>
 
       {movies.length === 0 ? (
         <p className="text-center">No movies added yet</p>
@@ -119,8 +119,8 @@ const MyCollections = () => {
                 className="h-96 w-full object-cover"
               />
               <div className="p-4">
-                <h2 className="text-2xl font-semibold text-center">{movie.title}</h2>
-                <div className="flex justify-between items-center">
+                <h2 className="text-xl font-semibold text-center">{movie.title}</h2>
+                <div className="flex justify-between items-center text-md font-semibold">
                   <div>
                     <p>Genre: {movie.genre}</p>
                     <p>Year: {movie.releaseYear}</p>
@@ -169,7 +169,7 @@ const MyCollections = () => {
               >
                 Cancel
               </button>
-              <button className="btn btn-primary" onClick={handleEditSubmit}>
+              <button className="btn-primary" onClick={handleEditSubmit}>
                 Save
               </button>
             </div>
