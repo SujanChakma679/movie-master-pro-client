@@ -120,11 +120,7 @@ movie-master/
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── index.css
-├── backend/
-│   ├── models/
-│   ├── routes/
-│   ├── controllers/
-│   └── server.js
+
 ├── public/
 ├── .env
 ├── package.json
