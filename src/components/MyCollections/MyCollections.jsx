@@ -105,7 +105,7 @@ const MyCollections = () => {
       {movies.length === 0 ? (
         <p className="text-center">No movies added yet</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {movies.map((movie) => (
             <div
               key={movie._id}
@@ -116,20 +116,20 @@ const MyCollections = () => {
               <img
                 src={movie.posterUrl}
                 alt={movie.title}
-                className="h-96 w-full object-cover"
+                className="h-56 w-full object-cover"
               />
-              <div className="p-4">
-                <h2 className="text-xl font-semibold text-center">{movie.title}</h2>
-                <div className="flex justify-between items-center text-md font-semibold">
+              <div className="p-2">
+                <h2 className="text-md font-semibold text-center">{movie.title}</h2>
+                <div className="flex justify-between items-center text-xs font-semibold">
                   <div>
                     <p>Genre: {movie.genre}</p>
                     <p>Year: {movie.releaseYear}</p>
                   </div>
-                  <p className="text-amber-800 font-semibold text-lg">Rating: {movie.rating}</p>
+                  <p className="text-amber-800 font-semibold text-xs">Rating: {movie.rating}</p>
                 </div>
 
                 <div className="flex justify-between mt-4">
-                  <button className="btn-primary !px-10" onClick={() => handleEditClick(movie)}>
+                  <button className="btn-primary px-10" onClick={() => handleEditClick(movie)}>
                     Edit
                   </button>
                   <button className="btn-primary" onClick={() => handleRemove(movie._id)}>
@@ -146,7 +146,7 @@ const MyCollections = () => {
       {editingMovie && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
-            <h2 className="text-2xl font-bold mb-4 text-center">Edit Movie</h2>
+            <h2 className="text-2xl font-bold text-black mb-4 text-center">Edit Movie</h2>
 
             <div className="flex flex-col space-y-3">
               {["title", "genre", "releaseYear", "rating", "posterUrl"].map((field) => (

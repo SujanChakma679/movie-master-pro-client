@@ -22,6 +22,8 @@ import { AppErrorBoundary } from "./components/Page/ErrorPage/AppErrorBoundary.j
 import NotFound from "./components/Page/ErrorPage/NotFound.jsx";
 import ErrorPage from "./components/Page/ErrorPage/ErrorPage.jsx";
 import useAxios from "./components/hooks/useAxios.jsx";
+import MyProfile from "./components/MyProfile/MyProfile.jsx";
+
 
 
 
@@ -52,6 +54,10 @@ const router = createBrowserRouter([
       { path: "register", 
         element: <Register /> 
       },
+
+      { path: "my-profile", 
+        element: <MyProfile /> 
+      },
       {
         path: "movieDetails/:id",
         loader: async ({ params }) => {
@@ -76,9 +82,7 @@ const router = createBrowserRouter([
       { 
         path: "movies/add", 
         element: (
-      <ProtectedRoute>
         <AddMovie />
-      </ProtectedRoute>
     ), 
       },
       { 
@@ -102,7 +106,9 @@ createRoot(document.getElementById("root")).render(
     <ThemeProvider>
           <AuthProvider>
                <AppErrorBoundary>
-                    <RouterProvider router={router} />
+                  
+                        <RouterProvider router={router} />
+                    
                </AppErrorBoundary>
           </AuthProvider>
     </ThemeProvider>

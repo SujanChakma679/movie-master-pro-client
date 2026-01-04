@@ -48,7 +48,7 @@ class InnerBoundary extends React.Component {
 }
 
 export const AppErrorBoundary = ({ children }) => {
-  // Wrap the class component so we can use hooks here
+
   const { isDark } = useTheme();
   return <InnerBoundary isDark={isDark}>{children}</InnerBoundary>;
 };

@@ -124,10 +124,10 @@ const MyWatchlist = () => {
     >
       <h2 className="text-2xl font-bold mb-6 text-center">My Watchlist</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {watchlist.map((item) => (
           <div key={item._id} className="bg-base-100 shadow-sm rounded-xl overflow-hidden">
-            <figure className="px-4 pt-4 h-96 w-full overflow-hidden">
+            <figure className="p-2 h-56 w-full overflow-hidden">
               <img
                 src={item.posterUrl}
                 alt={item.title}
@@ -136,8 +136,8 @@ const MyWatchlist = () => {
             </figure>
 
             <div className="p-4">
-              <h2 className="text-xl font-semibold text-center">{item.title}</h2>
-              <div className="flex items-center justify-around text-md font-semibold mt-2">
+              <h2 className="text-md font-semibold text-center">{item.title}</h2>
+              <div className="flex items-center justify-around text-xs font-semibold mt-2">
                 <div>
                   <p>Genre: {item.genre}</p>
                   <p>Release Year: {item.releaseYear}</p>
@@ -148,7 +148,7 @@ const MyWatchlist = () => {
               </div>
               <div className="mt-4 flex justify-center">
                 <button
-                  className="btn-primary !px-12"
+                  className="btn-primary px-12"
                   onClick={() => handleRemove(item._id)}
                   disabled={removingIds.has(item._id)}
                 >
@@ -163,4 +163,4 @@ const MyWatchlist = () => {
   );
 };
 
-export default MyWatchlist;
+export default MyWatchlist; 

@@ -29,7 +29,12 @@ const AddMovie = () => {
   e.preventDefault();
 
   if (!user?.email) {
-    toast.error("Please login to add a movie");
+     Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "PLease login to add movie!",
+            confirmButtonColor: "#3085d6",
+          });
     return;
   }
 
@@ -88,7 +93,7 @@ const AddMovie = () => {
 
   return (
     <div className="max-w-xl mx-auto p-4 md:p-8">
-      <h2 className="text-3xl font-bold mb-4 text-white text-center">
+      <h2 className="text-3xl font-bold mb-4 text-center">
         Add a Movie
       </h2>
 

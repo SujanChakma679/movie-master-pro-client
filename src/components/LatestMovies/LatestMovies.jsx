@@ -12,7 +12,7 @@ const LatestMovies = ({ movies }) => {
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-11/12 mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-11/12 mx-auto">
         {movies.map((movie) => (
           <div
             key={movie._id}
@@ -21,7 +21,7 @@ const LatestMovies = ({ movies }) => {
             }`}
           >
             
-            <figure className="px-10 pt-10 h-96 w-full overflow-hidden">
+            <figure className="h-50 w-full overflow-hidden">
               <img
                 src={movie.posterUrl}
                 alt={movie.title}
@@ -31,8 +31,8 @@ const LatestMovies = ({ movies }) => {
 
             
             <div>
-              <h2 className="text-xl font-semibold text-center">{movie.title}</h2>
-              <div className="flex items-center justify-around text-md font-semibold p-2">
+              <h2 className="text-lg font-semibold text-center">{movie.title}</h2>
+              <div className="flex items-center justify-around text-xs font-semibold p-2">
                 <div>
                   <p>Genre: {movie.genre}</p>
                   <p>Release Year: {movie.releaseYear}</p>
@@ -44,7 +44,7 @@ const LatestMovies = ({ movies }) => {
 
               
               <div className="card-actions">
-                <Link to={`/movieDetails/${movie._id}`} className="btn-primary !w-full">
+                <Link to={`/movieDetails/${movie._id}`} className="btn-primary w-full">
                   Details
                 </Link>
               </div>

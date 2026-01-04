@@ -1,5 +1,3 @@
-
-
 import React, { useContext, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router";
 import { AuthContext } from "../../context/AuthContext";
@@ -98,26 +96,50 @@ const MovieDetails = () => {
         <h2 className="font-bold text-4xl text-center py-4">{movie.title}</h2>
         <p className="text-center">
           <span className="font-semibold">Rating:</span>{" "}
-          <span className="font-bold text-3xl text-amber-500">{movie.rating}</span>
+          <span className="font-bold text-3xl text-amber-500">
+            {movie.rating}
+          </span>
         </p>
         <div className="space-y-2 text-lg p-4">
-          <p><span className="font-semibold">Genre:</span> {movie.genre}</p>
-          <p><span className="font-semibold">Release Year:</span> {movie.releaseYear}</p>
-          <p><span className="font-semibold">Director:</span> {movie.director}</p>
-          <p><span className="font-semibold">Cast:</span> {movie.cast}</p>
-          <p><span className="font-semibold">Duration:</span> {movie.duration} min</p>
-          <p><span className="font-semibold">Plot Summary:</span> {movie.plotSummary}</p>
-          <p><span className="font-semibold">Language:</span> {movie.language}</p>
-          <p><span className="font-semibold">Country:</span> {movie.country}</p>
+          <p>
+            <span className="font-semibold">Genre:</span> {movie.genre}
+          </p>
+          <p>
+            <span className="font-semibold">Release Year:</span>{" "}
+            {movie.releaseYear}
+          </p>
+          <p>
+            <span className="font-semibold">Director:</span> {movie.director}
+          </p>
+          <p>
+            <span className="font-semibold">Cast:</span> {movie.cast}
+          </p>
+          <p>
+            <span className="font-semibold">Duration:</span> {movie.duration}{" "}
+            min
+          </p>
+          <p>
+            <span className="font-semibold">Plot Summary:</span>{" "}
+            {movie.plotSummary}
+          </p>
+          <p>
+            <span className="font-semibold">Language:</span> {movie.language}
+          </p>
+          <p>
+            <span className="font-semibold">Country:</span> {movie.country}
+          </p>
         </div>
 
         {isOwner && (
           <div className="space-y-5 mt-4">
-            <button className="btn-primary !w-full" onClick={handleEditClick}>
+            <button className="btn-primary w-full" onClick={handleEditClick}>
               Edit
             </button>
-            
-            <button className="btn btn-warning w-full" onClick={handleDelete}>
+
+            <button
+              onClick={handleDelete}
+              className="w-full rounded-lg bg-gradient-to-r from-purple-500 to-indigo-600 px-4 py-2 text-white font-semibold shadow-md hover:from-purple-600 hover:to-indigo-700 transition duration-200"
+            >
               Delete
             </button>
           </div>
@@ -132,12 +154,21 @@ const MovieDetails = () => {
 
             <div className="flex flex-col space-y-3">
               {[
-                "title","genre","releaseYear","rating","posterUrl",
-                "director","cast","duration","plotSummary","language","country"
+                "title",
+                "genre",
+                "releaseYear",
+                "rating",
+                "posterUrl",
+                "director",
+                "cast",
+                "duration",
+                "plotSummary",
+                "language",
+                "country",
               ].map((field) => (
                 <div key={field}>
                   <label className="font-semibold text-gray-700 capitalize">
-                    {field.replace(/([A-Z])/g, ' $1')}
+                    {field.replace(/([A-Z])/g, " $1")}
                   </label>
                   <input
                     className="input input-bordered w-full"
